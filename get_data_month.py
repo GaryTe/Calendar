@@ -12,8 +12,12 @@ def get_data_month(year):
         month = MONTH_OF_YEAR[number_month]['name']
         data_of_year[month] = []
         value_days_of_month = MONTH_OF_YEAR[number_month]['days_of_month'] + offset_in_days
-
+        
         data_by_day = return_name_and_date_of_days(
+            {
+                'year': int(year),
+                'month': int(number_month)
+            },
             True,
             days_of_month = value_days_of_month,
             days_of_displacement = offset_in_days

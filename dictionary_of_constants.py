@@ -85,6 +85,16 @@ NAME_DAY = {
     '7': 'Воскресенье'
     }
 
-numbers = {
-    
+NUMBERS = {
+    'seven': 7,
+    'five': 5,
+    'zero': 0,
+    'six': 6,
+    'one': 1
     }
+
+WEEKDAY = {
+    'working_day': 'working day',
+    'day_off': 'day off'
+    }
+
