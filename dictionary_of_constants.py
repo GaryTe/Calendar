@@ -98,3 +98,6 @@ WEEKDAY = {
     'day_off': 'day off'
     }
 
+ERROR_MESSAGE = {
+    'value_error' : 'File "master_presenter", line 51 in check_render_data_month\nTypeError: value data_of_month is not type "dict"'
+    }
