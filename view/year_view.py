@@ -1,4 +1,4 @@
-from dictionary_of_constants import PARAMETER_CONDITION, MESSAGE_PROGRAM
+from constant.dictionary_of_constants import PARAMETER_CONDITION, MESSAGE_PROGRAM
 
 class YearView :
 

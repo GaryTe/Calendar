@@ -1,6 +1,9 @@
 from datetime import datetime
+from operator import itemgetter
 
-from list_constant import attribute_list
+from constant.list_constant import ATTRIBUTE_LIST
+
+day_, month_, _ = ATTRIBUTE_LIST 
 
 class DateTimeModel :
 
@@ -8,12 +11,12 @@ class DateTimeModel :
         result = ''
         today = datetime.today()
 
-        for attribute in attribute_list :
+        for attribute in  ATTRIBUTE_LIST:
             data_attribute = getattr(today, attribute)
-            if attribute == 'day' :
+            if attribute == day_ :
                 day = today.strftime('%d')
                 result += day
-            elif attribute == 'month' :
+            elif attribute == month_ :
                 month = today.strftime('%m')
                 result += f'.{month}'
             else :

@@ -90,7 +90,8 @@ NUMBERS = {
     'five': 5,
     'zero': 0,
     'six': 6,
-    'one': 1
+    'one': 1,
+    'two': '2'
     }
 
 WEEKDAY = {
