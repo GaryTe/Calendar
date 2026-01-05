@@ -102,7 +102,7 @@ class DayDateModel :
             return line
 
         if indicator_weekday == day_off :
-            value = '(выходной день)' if (day != number_day) else '(сегодняшней день)'
+            value = '(сегодняшней день)' if (day == number_day and (mon == month and year == year_)) else '(выходной день)'
             line = f'{NAME_DAY[str(key_value_day)]} : {number_day} число - {value}'
             return  line
         

@@ -1,7 +1,15 @@
 from operator import itemgetter
+from tkinter import *
+from time import time, localtime, strftime
 
-from view.year_view import *
-from view.month_view import *
+from view.calendar_view import *
+from view.label_time_date_view import *
+from view.label_year_view import *
+from view.button_reduce_year_view import *
+from view.button_increase_year_view import *
+from view.button_updating_view import *
+from model.year_model import *
+from model.month_model import *
 from model.day_date_model import *
 
 from constant.dictionary_of_constants import (
@@ -16,35 +24,37 @@ from constant.list_constant import LEAP_YEARS_LIST
 two = itemgetter( 'two' ) ( NUMBERS )
 
 class MasterPresenter :
-    __date_time_model = None
-    __date_time_counter_view = None
-    
-    __year_view = YearView()
-    __month_view = MonthView()
+    __window = Tk()
+    __year_model = YearModel()
+    __month_model = MonthModel()
     __day_date_model = DayDateModel()
-
-    def __init__ ( self,  date_time_model, date_time_counter_view ) :
-        MasterPresenter.__date_time_model = date_time_model
-        MasterPresenter.__date_time_counter_view = date_time_counter_view
-        
+    
+    __label_year_view = LabelYearView(
+        __year_model.get_year,
+        __window
+        )
+    __label_time_date_view = LabelTimeDateView( __window )
+    __calendar_view = CalendarView()
+    __button_reduce_year_view = ButtonReduceYearView( __window )
+    __button_increase_year_view = ButtonIncreaseYearView( __window )
+    __button_updating_view = ButtonUpdatingView( __window )
 
     def initialization ( self ) :
-        self.__check_value_from_input()
+        MasterPresenter.__window.title( 'Календарь' )
+        MasterPresenter.__window.resizable( 0, 0 )
+        MasterPresenter.__window.geometry( '400x600' )
+
+        MasterPresenter.__calendar_view.create_text(
+            MasterPresenter.__year_model.get_data_year,
+            self.__get_data_month
+            )
+        MasterPresenter.__label_year_view.create_label()
+        MasterPresenter.__button_updating_view.create_label( self.updating_calendar_by_day )
+        MasterPresenter.__button_reduce_year_view.create_button( self.handler_reduce_year )
+        MasterPresenter.__button_increase_year_view.create_button( self.handler_increase_year )
+        MasterPresenter.__label_time_date_view.create_label()
         
-
-    def __check_value_from_input ( self ) :
-        value_year = self.__year_view.get_data_year()
-
-        if value_year == PARAMETER_CONDITION['first_condition']:
-            self.__date_time_counter_view.stop_counter()
-            print(MESSAGE_PROGRAM['first_message'])
-            return
-        elif not value_year.isdigit() or (value_year < PARAMETER_CONDITION['second_condition'] or value_year > PARAMETER_CONDITION['third_condition']):
-            self.__check_value_from_input()
-            return
-
-        self.__get_data_month ( value_year )
-        
+        MasterPresenter.__window.mainloop()
 
     def __get_data_month (self,  year ) :
         data_of_month = {}
@@ -56,8 +66,8 @@ class MasterPresenter :
             if LEAP_YEARS_LIST.count( year ) > 0 and number_month == two :
                 day += 1
             
-            data_month = self.__month_view.get_data_month(number_month, offset_in_days, day)
-            data_by_day = self.__day_date_model.initialization(
+            data_month = MasterPresenter.__month_model.get_data_month(number_month, offset_in_days, day)
+            data_by_day = MasterPresenter.__day_date_model.initialization(
                 {
                     'year': int(year),
                     'month': int(number_month)
@@ -70,19 +80,23 @@ class MasterPresenter :
             data_of_month[data_month['name_month']] = data_by_day['data_month']
             offset_in_days = data_by_day['offset']
 
-        self.__check_render_data_month ( data_of_month,  year )
-        
+        return data_of_month
 
-    def  __check_render_data_month (self, data_of_month,  year) :
-        if type( data_of_month ) != dict :
-            raise ValueError( ERROR_MESSAGE['value_error'] )
-
-        date_and_time = self.__date_time_model.get_date_and_time()
-        print('\n' + year, 'год')
-        print('\n', date_and_time, '\n')
+    def handler_reduce_year ( self ) :
+        data_text = MasterPresenter.__year_model.reduce_year( self.__get_data_month )
         
-        for name_key, data in data_of_month.items():
-            print('\n' + name_key + '\n')
-            for value in data:
-                print(value)
-    
+        MasterPresenter.__label_year_view.change_value_label( self.__year_model.get_year() )
+        MasterPresenter.__calendar_view.change_value_calendar( data_text )
+
+    def handler_increase_year ( self ) :
+        data_text = MasterPresenter.__year_model.increase_year( self.__get_data_month )
+        
+        MasterPresenter.__label_year_view.change_value_label( self.__year_model.get_year() )
+        MasterPresenter.__calendar_view.change_value_calendar( data_text )
+
+    def updating_calendar_by_day ( self ) :
+        year = strftime('%Y', localtime(time()))
+        data_text = self.__year_model.get_data_year( self.__get_data_month, year )
+
+        self.__label_year_view.change_value_label( self.__year_model.get_year() )
+        self.__calendar_view.change_value_calendar( data_text )
