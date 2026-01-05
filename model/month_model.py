@@ -1,6 +1,6 @@
 from constant.dictionary_of_constants import MONTH_OF_YEAR
 
-class MonthView :
+class MonthModel :
 
     def get_data_month ( self, number_month, offset_in_days, day ) :
         month = MONTH_OF_YEAR[number_month]['name']
